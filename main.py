@@ -30,11 +30,12 @@ def prepare_html(availability, diff):
             available = len(availability[museum]['available'][library])
             total = len(availability[museum]['all'][library])
             output += f'<tr style="{style}"><td>{museum}</td><td>{library}</td><td>{available}/{total}</td></tr>\n'
-        for library in diff[museum]:
-            style = style_removed_row()
-            available = 0
-            total = len(availability[museum]['all'][library])
-            output += f'<tr style="{style}"><td>{museum}</td><td>{library}</td><td>{available}/{total}</td></tr>\n'
+        if museum in diff:
+            for library in diff[museum]:
+                style = style_removed_row()
+                available = 0
+                total = len(availability[museum]['all'][library])
+                output += f'<tr style="{style}"><td>{museum}</td><td>{library}</td><td>{available}/{total}</td></tr>\n'
     output += "</table><br>\n"
 
     output += "<h4>Passes being tracked</h4>\n"
