@@ -1,6 +1,8 @@
 libraryRecord:
   url: https://gateway.bibliocommons.com/v2/libraries/chipublib/bibs
 museums:
+  # Source of available museums: https://www.chipublib.org/faq/kids-museum-passports/
+  # (under "What museums can I get passes for?")
   Adler Planetarium: S126C2108681
   American Writers Museum: S126C2108182
   Art Institute of Chicago: S126C2108684
@@ -8,5 +10,15 @@ museums:
   Brookfield Zoo: S126C2108691
   Chicago Botanic Garden: S126C2108692
   Chicago Children's Museum: S126C2108694
+  Chicago History Museum: S126C2108696
+  DuSable Museum of African American History: S126C2108697
+  The Field Museum: S126C2108699
+  Illinois Holocaust Museum & Education Center: S126C2108183
+  Lincoln Park Zoo: S126C2108703
+  McCormick Bridgehouse & Chicago River Museum: S126C2108704
+  Museum of Contemporary Art: S126C2108705
   Museum of Science and Industry: S126C2108707
+  National Museum of Mexican Art: S126C2108708
+  National Museum of Puerto Rican Arts & Culture: S126C2108709
+  Peggy Notebaert Nature Museum: S126C2108710
   Shedd Aquarium: S126C2108712
