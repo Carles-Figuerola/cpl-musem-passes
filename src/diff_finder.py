@@ -1,7 +1,6 @@
-from cpl_adapter import CPLAdapter
 from notify import Notify
 from state import State
-import yaml
+from threading import Thread
 
 
 def style_removed_row():
@@ -52,32 +51,56 @@ def prepare_html(availability, diff):
                     output += f"<tr><td>{museum}</td><td>{library}</td><td>Unknown</td></tr>\n"
             
 
-    return output     
+    return output
 
-def main():
-    config_file = "config/cpl.yaml"
-    adapter = CPLAdapter(config_file)
-    state = State('data/state.json')
+class DiffFinder():
+    def __init__(self,logger, adapter, config, data_folder):
+        self.logger = logger
+        self.config = config
+        self.data_folder = data_folder
+        self.adapter = adapter
 
-    with open('data/config.yaml', 'r') as fd:
-        user_config = yaml.safe_load(fd)
+        self.states = {}
+        for each_user_config in config['configs']:
+            self.states[each_user_config['name']] = State(f"{self.data_folder}/{each_user_config['name']}-state.json")
+        a = True
 
-    library_list = user_config["libraries"]
-    museum_list = user_config["museums"]
+    def run(self):
+        thread = Thread(target=self.diff_and_notify)
+        thread.start()
 
-    availability = {}
-    for museum in museum_list:
-        availability[museum] = adapter.get_pass_availability(museum, libraries=library_list)
+    def diff(self, user_config):
+        config_name = user_config['name']
+        library_list = user_config["libraries"]
+        museum_list = user_config["museums"]
 
-    has_changes, diff = state.has_changes(availability)
-    if has_changes:
-        print("Changes detected, sending email")    
-        html_content = prepare_html(availability, diff)
-        notify = Notify(user_config["email"])
-        notify.send_email("There has been a change in availability", html_content)
-    else:
-        print("No changes detected, not sending email")
-    state.save(availability)
+        availability = {}
+        for museum in museum_list:
+            availability[museum] = self.adapter.get_pass_availability(museum, libraries=library_list)
+        has_changes, diff = self.states[config_name].has_changes(availability)
+
+        return availability, has_changes, diff
+
+    def diff_and_return_for_user(self, user):
+        for each_user_config in self.config['configs']:
+            if each_user_config['name'] == user:
+                user_config = each_user_config
+
+        availability, _, _ = self.diff(user_config)
+        return availability
+
+    def diff_and_notify(self):
+        for each_user_config in self.config['configs']:
+            availability, has_changes, diff = self.diff(each_user_config)
+        
+            if has_changes:
+                self.logger.info("Changes detected, sending email")    
+                html_content = prepare_html(availability, diff)
+                notify = Notify(self.config["email"])
+                notify.send_email(each_user_config["email"], "There has been a change in availability", html_content)
+            else:
+                self.logger.info("No changes detected, not sending email")
+            self.states[each_user_config['name']].save(availability)
 
 if __name__ == "__main__":
-    main()
+    DiffFinder(None).run()

@@ -1,0 +1,25 @@
+configs:
+  - name: carles
+    libraries:
+      - Lincoln Park
+      - Near North
+      - Merlo
+      - Water Works
+      - West Town
+      - West Loop
+      - Uptown
+      - Harold Washington Library Center
+    museums:
+      - Chicago Children's Museum
+      - Museum of Science and Industry
+      - Shedd Aquarium
+    email: 
+      - carlesgf@gmail.com
+
+email:
+  from: christine.carles@figuerola.info
+  username: "AKIARFTFMRMW6EWHXK4Q"
+  password: "BKFADLkxI/TfEfeSkr+Ro0iI5Sr9JKTvaIFeNOo2oqRa"
+  smtp: email-smtp.us-west-2.amazonaws.com
+  port: 465
+  tls: True

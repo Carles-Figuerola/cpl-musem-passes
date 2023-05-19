@@ -8,18 +8,18 @@ class Notify():
         self.config = config
             
         
-    def send_email(self, subject, html_content):
+    def send_email(self, to, subject, html_content):
         message = MIMEMultipart("alternative")
         message["Subject"] = subject
         message["From"] = f'CPL Museum Passes <{self.config["from"]}>'
-        message["To"] = ",".join(self.config["to"])
+        message["To"] = ",".join(to)
         html = MIMEText(html_content, "html")
         message.attach(html)
 
         with smtplib.SMTP_SSL(self.config["smtp"], self.config["port"]) as server:
             server.ehlo()
             server.login(self.config["username"], self.config["password"])
-            result = server.sendmail(self.config["from"], self.config["to"], message.as_string())
+            result = server.sendmail(self.config["from"], to, message.as_string())
 
         if len(result) > 0:
             return result

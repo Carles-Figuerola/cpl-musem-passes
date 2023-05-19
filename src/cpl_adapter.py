@@ -2,7 +2,8 @@ import requests
 import yaml
 
 class CPLAdapter:
-    def __init__(self, cpl_config):
+    def __init__(self, logger, cpl_config):
+        self.logger = logger
         with open(cpl_config, 'r') as fd:
             content = yaml.safe_load(fd)
 
@@ -11,7 +12,7 @@ class CPLAdapter:
 
 
     def get_pass_availability(self, museum, libraries):
-        print(f'Getting url: {self.url}{self.museums[museum]}/availability')
+        self.logger.info(f'Getting url: {self.url}{self.museums[museum]}/availability')
         response = requests.get(f'{self.url}/{self.museums[museum]}/availability')
         if response.ok:
             availability = response.json()["entities"]["bibItems"]
